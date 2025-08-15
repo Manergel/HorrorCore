@@ -1,15 +1,29 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
-
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "EnhancedInputSubSystems.h"
+#include "EnhancedInputComponent.h"
+
 #include "MyCharacter.generated.h"
+
 
 UCLASS()
 class HORRORCORE_API AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* LookAction;
+
+
 
 public:
 	// Sets default values for this character's properties
