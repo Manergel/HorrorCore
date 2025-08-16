@@ -1,11 +1,8 @@
+#pragma once
+
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
-#include "InputMappingContext.h"
-#include "InputAction.h"
-#include "EnhancedInputSubSystems.h"
-#include "EnhancedInputComponent.h"
-
+#include "InputActionValue.h"
 #include "MyCharacter.generated.h"
 
 
@@ -14,30 +11,22 @@ class HORRORCORE_API AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputMappingContext* DefaultMappingContext;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* MoveAction;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UInputAction* LookAction;
-
-
 
 public:
-	// Sets default values for this character's properties
 	AMyCharacter();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* MoveAction;
+
+	void Move(const FInputActionValue& Value);
+
 
 };
