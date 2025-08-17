@@ -8,7 +8,9 @@
 
 AMyCharacter::AMyCharacter()
 {
-
+	FirstPersonCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FirstPersonCamera->SetupAttachment(RootComponent);
+	FirstPersonCamera->bUsePawnControlRotation = true;
 
 
 }
@@ -38,6 +40,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	if (UEnhancedInputComponent* EnhancedInput = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
 		EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
+
+		EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
 	}
 
 
@@ -45,6 +49,26 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::Move(const FInputActionValue& Value) 
 {
-	UE_LOG(LogTemp, Warning, TEXT("Move input received: %s"), *Value.ToString());
+	FVector2D MovementVector = Value.Get<FVector2D>();
+
+	if (Controller != nullptr)
+	{
+		const FRotator Rotation = Controller->GetControlRotation();
+		const FRotator YawRotation(0, Rotation.Yaw, 0);
+
+		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+
+		AddMovementInput(ForwardDirection, MovementVector.X);
+		AddMovementInput(RightDirection, MovementVector.Y);
+	}
+}
+
+void AMyCharacter::Look(const FInputActionValue& Value)
+{
+	FVector2D LookAxis = Value.Get<FVector2D>();
+
+	AddControllerYawInput(LookAxis.X);
+	AddControllerPitchInput(LookAxis.Y);
 }
 

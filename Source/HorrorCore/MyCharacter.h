@@ -3,6 +3,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Camera/CameraComponent.h"
 #include "MyCharacter.generated.h"
 
 
@@ -26,7 +27,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* MoveAction;
 
+	UFUNCTION()
 	void Move(const FInputActionValue& Value);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* LookAction;
+
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	class UCameraComponent* FirstPersonCamera;
 
 
 };
