@@ -4,6 +4,7 @@
 #include "InputMappingContext.h"
 #include "InputAction.h"
 #include "GameFramework/PlayerController.h"
+#include "IInteractable.h"
 
 
 AMyCharacter::AMyCharacter()
@@ -42,6 +43,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInput->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyCharacter::Move);
 
 		EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
+
+		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMyCharacter::Interact);
 	}
 
 
@@ -59,16 +62,45 @@ void AMyCharacter::Move(const FInputActionValue& Value)
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		AddMovementInput(ForwardDirection, MovementVector.X);
-		AddMovementInput(RightDirection, MovementVector.Y);
+		AddMovementInput(ForwardDirection, MovementVector.Y);
+		AddMovementInput(RightDirection, MovementVector.X);
 	}
 }
+
 
 void AMyCharacter::Look(const FInputActionValue& Value)
 {
 	FVector2D LookAxis = Value.Get<FVector2D>();
 
-	AddControllerYawInput(LookAxis.X);
-	AddControllerPitchInput(LookAxis.Y);
+	if (Controller != nullptr)
+	{
+		AddControllerYawInput(LookAxis.X);
+		AddControllerPitchInput(-LookAxis.Y);
+	}
+}
+
+
+void AMyCharacter::Interact(const FInputActionValue& Value)
+{
+	FVector Start = FirstPersonCamera->GetComponentLocation();
+	FVector End = Start + FirstPersonCamera->GetForwardVector() * 300.f;
+
+	FHitResult Hit;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+
+	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
+	{
+		AActor* HitActor = Hit.GetActor();
+		if (HitActor && HitActor->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+		{
+			IInteractable* Interactable = Cast<IInteractable>(HitActor);
+			if (Interactable)
+			{
+				Interactable->Interact(this);
+			}
+		}
+
+	}
 }
 
