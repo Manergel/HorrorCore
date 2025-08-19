@@ -1,29 +1,50 @@
 #include "Door.h"
-#include "Engine/Engine.h"
 
 ADoor::ADoor()
 {
 
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
+
+	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMesh"));
+	RootComponent = DoorMesh;
 
 }
 
-void ADoor::Interact(AActor* Caller)
+void ADoor::BeginPlay()
 {
-	UE_LOG(LogTemp, Warning, TEXT("The door creaks open!"));
+	Super::BeginPlay();
+
+}
+
+void ADoor::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	CurrentAlpha = FMath::FInterpTo(CurrentAlpha, TargetAlpha, DeltaTime, OpenSpeed);
+
+	float CurrentYaw = FMath::Lerp(0.0f, OpenAngle, CurrentAlpha);
+	DoorMesh->SetRelativeRotation(FRotator(0, CurrentYaw, 0));
+
+}
+
+void ADoor::Interact(class AActor*)
+{
+	if (bIsOpen)
+	{
+		TargetAlpha = 0.0f;
+		bIsOpen = false;
+	}
+	
+	else
+	{
+		TargetAlpha = 1.0f;
+		bIsOpen = true;
+	}
 }
 
 
-//void ADoor::BeginPlay()
-//{
-//	Super::BeginPlay();
-//	
-//}
-//
-//
-//void ADoor::Tick(float DeltaTime)
-//{
-//	Super::Tick(DeltaTime);
-//
-//}
+
+
+
+
 

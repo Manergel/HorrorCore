@@ -44,7 +44,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
 
-		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Triggered, this, &AMyCharacter::Interact);
+		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Started, this, &AMyCharacter::Interact);
 	}
 
 
