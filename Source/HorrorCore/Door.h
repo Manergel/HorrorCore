@@ -13,25 +13,24 @@ class HORRORCORE_API ADoor : public AActor, public IInteractable
 public:	
 	ADoor();
 
-	virtual void Interact(AActor* Caller) override;
-
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* DoorMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Door")
 	float OpenAngle = 90.0f;
-
 	UPROPERTY(EditAnywhere, Category = "Door")
-	float OpenSpeed = 2.0f;
+	float OpenSpeed = 90.0f;
 
 	bool bIsOpen = false;
-	float CurrentAlpha = 0.0f;
-	float TargetAlpha = 0.0f;
+	float TargetYaw;
+	float InitialYaw;
+
+	virtual void Interact(AActor* Interactor) override;
 
 };

@@ -15,5 +15,5 @@ class HORRORCORE_API IInteractable
 	GENERATED_BODY()
 
 public:
-	virtual void Interact(AActor* Caller) = 0;
+	virtual void Interact(AActor* Interactor) = 0;
 };
