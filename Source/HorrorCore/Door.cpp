@@ -1,14 +1,17 @@
 #include "Door.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/BoxComponent.h"
-#include "GameFramework/Character.h"
+
 
 ADoor::ADoor()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	FrameMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FrameMesh"));
+	RootComponent = FrameMesh;
+
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("DoorMesh"));
-	RootComponent = DoorMesh;
+	DoorMesh->SetupAttachment(FrameMesh);
+	DoorMesh->SetRelativeLocation(FVector::ZeroVector);
+	DoorMesh->SetRelativeRotation(FRotator::ZeroRotator);
 }
 
 void ADoor::BeginPlay()
@@ -24,9 +27,9 @@ void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator CurrentRotation = GetActorRotation();
+	FRotator CurrentRotation = DoorMesh->GetRelativeRotation();
 	float NewYaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, OpenSpeed);
-	SetActorRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
+	DoorMesh->SetRelativeRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
 
 }
 
@@ -46,8 +49,8 @@ void ADoor::Interact(AActor* Interactor)
 		TargetYaw = InitialYaw;
 		UE_LOG(LogTemp, Warning, TEXT("Door closed by %s"), *Interactor->GetName());
 	}
-
 }
+
 
 
 

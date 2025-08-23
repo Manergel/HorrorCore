@@ -20,6 +20,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* FrameMesh;
+
+	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* DoorMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Door")
