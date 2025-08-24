@@ -13,7 +13,7 @@ AMyCharacter::AMyCharacter()
 	FirstPersonCamera->SetupAttachment(RootComponent);
 	FirstPersonCamera->bUsePawnControlRotation = true;
 
-
+	FlashlightComponent = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashlightComponent"));
 }
 
 
@@ -45,6 +45,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInput->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look);
 
 		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Started, this, &AMyCharacter::Interact);
+
+		EnhancedInput->BindAction(FlashlightAction, ETriggerEvent::Started, FlashlightComponent, &UFlashlightComponent::ToggleFlashlight);
 	}
 
 

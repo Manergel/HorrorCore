@@ -4,6 +4,7 @@
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
+#include "UFlashlightComponent.h"
 #include "MyCharacter.generated.h"
 
 
@@ -40,6 +41,13 @@ protected:
 	void Look(const FInputActionValue& Value);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
 	class UCameraComponent* FirstPersonCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Input")
+	class UFlashlightComponent* FlashlightComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
+	class UInputAction* FlashlightAction;
+
+
 
 
 };
