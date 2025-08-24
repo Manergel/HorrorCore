@@ -12,6 +12,7 @@ ADoor::ADoor()
 	DoorMesh->SetupAttachment(FrameMesh);
 	DoorMesh->SetRelativeLocation(FVector::ZeroVector);
 	DoorMesh->SetRelativeRotation(FRotator::ZeroRotator);
+
 }
 
 void ADoor::BeginPlay()
@@ -36,19 +37,37 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::Interact(AActor* Interactor)
 {
+	if (!Interactor) return;
+
 	bIsOpen = !bIsOpen;
 
 	if (bIsOpen)
-	{
-		TargetYaw = InitialYaw + OpenAngle;
-		UE_LOG(LogTemp, Warning, TEXT("Door opened by %s"), *Interactor->GetName());
+	{	
+		FVector DoorForward = FrameMesh->GetForwardVector();
+		FVector ToPlayer = Interactor->GetActorLocation() - GetActorLocation();
+		ToPlayer.Normalize();
+
+		float Dot = FVector::DotProduct(DoorForward, ToPlayer);
+
+		if (Dot < 0)
+		{
+			TargetYaw = InitialYaw + OpenAngle;
+		}
+		
+		else
+		{
+			TargetYaw = InitialYaw - OpenAngle;
+		}
+
+		//UE_LOG(LogTemp, Warning, TEXT("Door opened by %s"), *Interactor->GetName());
 	}
 
 	else
 	{
 		TargetYaw = InitialYaw;
-		UE_LOG(LogTemp, Warning, TEXT("Door closed by %s"), *Interactor->GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("Door closed by %s"), *Interactor->GetName());
 	}
+
 }
 
 

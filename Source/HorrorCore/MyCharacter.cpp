@@ -82,7 +82,7 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 void AMyCharacter::Interact(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
+	//UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetForwardVector() * 300.f;
 
