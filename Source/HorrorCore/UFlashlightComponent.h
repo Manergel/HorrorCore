@@ -1,7 +1,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/ActorComponent.h"
 #include "UFlashlightComponent.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -19,16 +19,29 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleFlashlight();
 
-	UPROPERTY(VisibleAnywhere)
-	class USpotLightComponent* Flashlight;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float MainIntensity = 2000.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
-	class UInputAction* FlashlightAction;
-	float Intensity = 5000.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float GlowIntensity = 300.0f;
 
-	bool bIsOn = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float AttenuationRadius = 600.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float InnerConeAngle = 15.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	FLinearColor FlashlightColor = FLinearColor(1.0f, 0.95f, 0.85f);
 
 private:
+	UPROPERTY()
+	class USpotLightComponent* MainBeam;
+
+	UPROPERTY()
+	class USpotLightComponent* SoftGlow;
+
+	bool bIsOn = false;
 
 
 };

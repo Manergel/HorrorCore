@@ -47,6 +47,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* FlashlightAction;
 
+	void ToggleFlashlight();
+
 
 
 

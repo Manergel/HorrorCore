@@ -46,7 +46,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Started, this, &AMyCharacter::Interact);
 
-		EnhancedInput->BindAction(FlashlightAction, ETriggerEvent::Started, FlashlightComponent, &UFlashlightComponent::ToggleFlashlight);
+		EnhancedInput->BindAction(FlashlightAction, ETriggerEvent::Started, this, &AMyCharacter::ToggleFlashlight);
 	}
 
 
@@ -104,6 +104,14 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 			}
 		}
 
+	}
+}
+
+void AMyCharacter::ToggleFlashlight()
+{
+	if (FlashlightComponent)
+	{
+		FlashlightComponent->ToggleFlashlight();
 	}
 }
 
