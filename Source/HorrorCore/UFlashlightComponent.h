@@ -20,7 +20,7 @@ public:
 	void ToggleFlashlight();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
-	float MainIntensity = 1000.0f;
+	float MainIntensity = 150.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
 	float AttenuationRadius = 3000.0f;
