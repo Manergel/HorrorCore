@@ -3,7 +3,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "IInteractable.h"
+#include "MyCharacter.h"
 #include "PickupActor.generated.h"
+
 
 UCLASS()
 class HORRORCORE_API APickupActor : public AActor, public IInteractable

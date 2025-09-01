@@ -49,7 +49,14 @@ protected:
 
 	void ToggleFlashlight();
 
+public:
+	int32 KeysCollected = 0;
 
+	void AddKey()
+	{
+		KeysCollected++;
+		UE_LOG(LogTemp, Warning, TEXT("Keys: %d"), KeysCollected);
+	}
 
 
 };

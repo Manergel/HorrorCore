@@ -15,7 +15,11 @@ void APickupActor::BeginPlay()
 
 void APickupActor::Interact(AActor* Interactor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Picked up by %s"), *Interactor->GetName());
+	if (AMyCharacter* Player = Cast<AMyCharacter>(Interactor))
+	{
+		Player->AddKey();
+	}
+	//UE_LOG(LogTemp, Warning, TEXT("Picked up by %s"), *Interactor->GetName());
 
 	Destroy();
 }
