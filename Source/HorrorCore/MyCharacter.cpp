@@ -14,6 +14,8 @@ AMyCharacter::AMyCharacter()
 	FirstPersonCamera->bUsePawnControlRotation = true;
 
 	FlashlightComponent = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashlightComponent"));
+
+	Inventory = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
 }
 
 

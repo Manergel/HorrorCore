@@ -5,6 +5,7 @@
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
 #include "UFlashlightComponent.h"
+#include "InventoryComponent.h"
 #include "MyCharacter.generated.h"
 
 
@@ -50,6 +51,9 @@ protected:
 	void ToggleFlashlight();
 
 public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UInventoryComponent* Inventory;
+
 	int32 KeysCollected = 0;
 
 	void AddKey()

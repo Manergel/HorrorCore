@@ -4,6 +4,7 @@
 #include "GameFramework/Actor.h"
 #include "IInteractable.h"
 #include "MyCharacter.h"
+#include "InventoryComponent.h"
 #include "PickupActor.generated.h"
 
 
@@ -17,6 +18,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* Object;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName ItemID;
 
 	virtual void Interact(AActor* Interactor) override;
 

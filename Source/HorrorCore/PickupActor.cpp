@@ -15,11 +15,21 @@ void APickupActor::BeginPlay()
 
 void APickupActor::Interact(AActor* Interactor)
 {
+	if (Interactor)
+	{
+		UInventoryComponent* Inventory = Interactor->FindComponentByClass<UInventoryComponent>();
+		if (Inventory)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Found Inventory"));
+			Inventory->AddItem(ItemID);
+		}
+
+	}
 	if (AMyCharacter* Player = Cast<AMyCharacter>(Interactor))
 	{
 		Player->AddKey();
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Picked up by %s"), *Interactor->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Picked up by %s"), *Interactor->GetName());
 
 	Destroy();
 }
