@@ -49,6 +49,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		EnhancedInput->BindAction(InteractAction, ETriggerEvent::Started, this, &AMyCharacter::Interact);
 
 		EnhancedInput->BindAction(FlashlightAction, ETriggerEvent::Started, this, &AMyCharacter::ToggleFlashlight);
+
+		EnhancedInput->BindAction(InventoryAction, ETriggerEvent::Started, this, &AMyCharacter::ToggleInventory);
 	}
 
 
@@ -116,4 +118,10 @@ void AMyCharacter::ToggleFlashlight()
 		FlashlightComponent->ToggleFlashlight();
 	}
 }
+
+void AMyCharacter::ToggleInventory()
+{
+
+}
+
 

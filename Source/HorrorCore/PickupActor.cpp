@@ -25,10 +25,10 @@ void APickupActor::Interact(AActor* Interactor)
 		}
 
 	}
-	if (AMyCharacter* Player = Cast<AMyCharacter>(Interactor))
-	{
-		Player->AddKey();
-	}
+	//if (AMyCharacter* Player = Cast<AMyCharacter>(Interactor))
+	//{
+	//	Player->AddKey();
+	//}
 	UE_LOG(LogTemp, Warning, TEXT("Picked up by %s"), *Interactor->GetName());
 
 	Destroy();

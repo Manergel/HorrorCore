@@ -18,8 +18,18 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
 	TArray<FName> Items;
+	/*TArray<FName> Keys;*/
 
-	TArray<FName> Keys;
+	UPROPERTY()
+	TArray<FName> QuestItems;
+
+	UPROPERTY()
+	TArray<FName> InventoryItems;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	int32 MaxSlots = 8;
+
+
 
 protected:
 	virtual void BeginPlay() override;
