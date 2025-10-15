@@ -3,6 +3,8 @@
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
+#include "InventoryComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "IInteractable.h"
 
@@ -52,8 +54,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		EnhancedInput->BindAction(InventoryAction, ETriggerEvent::Started, this, &AMyCharacter::ToggleInventory);
 	}
-
-
 }
 
 void AMyCharacter::Move(const FInputActionValue& Value) 
@@ -121,7 +121,19 @@ void AMyCharacter::ToggleFlashlight()
 
 void AMyCharacter::ToggleInventory()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ToggleInventory called"));
 
+	if (InventoryWidget)
+	{
+		if (InventoryWidget->IsInViewport())
+		{
+			InventoryWidget->RemoveFromParent();
+		}
+		else
+		{
+			InventoryWidget->AddToViewport(9999);
+		}
+	}
 }
 
 

@@ -5,9 +5,10 @@
 #include "InputActionValue.h"
 #include "Camera/CameraComponent.h"
 #include "UFlashlightComponent.h"
-#include "InventoryComponent.h"
 #include "MyCharacter.generated.h"
 
+class UInventoryComponent;
+class UUserWidget;
 
 UCLASS()
 class HORRORCORE_API AMyCharacter : public ACharacter
@@ -51,20 +52,26 @@ protected:
 	void ToggleInventory();
 	void ToggleFlashlight();
 
+	UPROPERTY(EditAnywhere, Category = "UI")
+	TSubclassOf<UUserWidget> InventoryWidgetClass;
+	UPROPERTY()
+	UUserWidget* InventoryWidget = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	UInventoryComponent* Inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* InventoryAction;
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UInventoryComponent* Inventory;
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	//UInventoryComponent* Inventory;
 
-	int32 KeysCollected = 0;
+	//int32 KeysCollected = 0;
 
-	void AddKey()
-	{
-		KeysCollected++;
-		UE_LOG(LogTemp, Warning, TEXT("Keys: %d"), KeysCollected);
-	}
+	//void AddKey()
+	//{
+	//	KeysCollected++;
+	//	UE_LOG(LogTemp, Warning, TEXT("Keys: %d"), KeysCollected);
+	//}
 
 
 };
