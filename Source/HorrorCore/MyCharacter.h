@@ -57,7 +57,7 @@ protected:
 	UPROPERTY()
 	UUserWidget* InventoryWidget = nullptr;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UInventoryComponent* Inventory;
+	UInventoryComponent* InventoryComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* InventoryAction;
 
