@@ -6,7 +6,8 @@
 #include "InventoryComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
-#include "IInteractable.h"
+#include "Door.h"
+//#include "IInteractable.h"
 
 
 AMyCharacter::AMyCharacter()
@@ -17,7 +18,7 @@ AMyCharacter::AMyCharacter()
 
 	FlashlightComponent = CreateDefaultSubobject<UFlashlightComponent>(TEXT("FlashlightComponent"));
 
-	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));
+	/*InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("Inventory"));*/
 }
 
 
@@ -88,26 +89,44 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 void AMyCharacter::Interact(const FInputActionValue& Value)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
+	UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetForwardVector() * 300.f;
+
+	//DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.5f, 0, 1.f);
 
 	FHitResult Hit;
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(this);
 
+	// Trace forward from the camera
 	if (GetWorld()->LineTraceSingleByChannel(Hit, Start, End, ECC_Visibility, Params))
 	{
-		AActor* HitActor = Hit.GetActor();
-		if (HitActor && HitActor->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+		if (Hit.GetActor())
 		{
-			IInteractable* Interactable = Cast<IInteractable>(HitActor);
-			if (Interactable)
+			UE_LOG(LogTemp, Warning, TEXT("Trace hit actor: %s"), *Hit.GetActor()->GetName());
+
+			// Get the actual owner actor of the component hit
+			ADoor* Door = Cast<ADoor>(Hit.GetActor());
+			if (!Door && Hit.GetComponent())
 			{
-				Interactable->Interact(this);
+				Door = Cast<ADoor>(Hit.GetComponent()->GetOwner());
+			}
+
+			if (Door)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Calling ADoor::Interact on door"));
+				Door->Interact(this);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Hit actor is not a door"));
 			}
 		}
-
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Trace missed"));
 	}
 }
 
@@ -121,19 +140,39 @@ void AMyCharacter::ToggleFlashlight()
 
 void AMyCharacter::ToggleInventory()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ToggleInventory called"));
+	// DEBUG: Logging widget status
+	UE_LOG(LogTemp, Warning, TEXT("ToggleInventory called. Instance=%p, Class=%s"), InventoryWidget, *GetNameSafe(InventoryWidgetClass));
 
+	if (!InventoryWidgetClass)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("InventoryWidgetClass not set on %s"), *GetNameSafe(this));
+		return;
+	}
+
+	// Create the widget if it doesn't exist, and remove it if it does
 	if (InventoryWidget)
 	{
-		if (InventoryWidget->IsInViewport())
+		// Widget already exists, remove it
+		InventoryWidget->RemoveFromViewport();
+		InventoryWidget = nullptr;  // Reset widget reference
+	}
+	else
+	{
+		// Create the widget and add it to the viewport
+		InventoryWidget = CreateWidget<UUserWidget>(GetWorld(), InventoryWidgetClass);
+		if (InventoryWidget)
 		{
-			InventoryWidget->RemoveFromParent();
+			InventoryWidget->AddToViewport(100);  // Z-order 100, adjust as needed
 		}
-		else
+
+		// Switch input mode to Game and UI when inventory is opened
+		if (APlayerController* PC = Cast<APlayerController>(GetController()))
 		{
-			InventoryWidget->AddToViewport(9999);
+			FInputModeGameAndUI InputMode;
+			InputMode.SetWidgetToFocus(InventoryWidget->TakeWidget());
+			InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+			PC->SetInputMode(InputMode);
+			PC->bShowMouseCursor = true;
 		}
 	}
 }
-
-

@@ -37,6 +37,8 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::Interact(AActor* Interactor)
 {
+	UE_LOG(LogTemp, Warning, TEXT("ADoor::Interact called by %s"), *Interactor->GetName());
+
 	if (!Interactor) return;
 
 	bIsOpen = !bIsOpen;
@@ -69,12 +71,3 @@ void ADoor::Interact(AActor* Interactor)
 	}
 
 }
-
-
-
-
-
-
-
-
-

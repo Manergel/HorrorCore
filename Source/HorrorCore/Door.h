@@ -2,11 +2,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "IInteractable.h"
+//#include "IInteractable.h"
 #include "Door.generated.h"
 
 UCLASS()
-class HORRORCORE_API ADoor : public AActor, public IInteractable
+class HORRORCORE_API ADoor : public AActor//, public IInteractable
 {
 	GENERATED_BODY()
 	
@@ -34,6 +34,7 @@ public:
 	float TargetYaw;
 	float InitialYaw;
 
-	virtual void Interact(AActor* Interactor) override;
+	UFUNCTION(BlueprintCallable)
+	void Interact(AActor* Interactor);
 
 };

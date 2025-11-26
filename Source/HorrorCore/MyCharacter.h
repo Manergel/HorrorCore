@@ -49,15 +49,18 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* FlashlightAction;
 
+	UFUNCTION()
 	void ToggleInventory();
+	UFUNCTION()
 	void ToggleFlashlight();
 
-	UPROPERTY(EditAnywhere, Category = "UI")
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> InventoryWidgetClass;
 	UPROPERTY()
 	UUserWidget* InventoryWidget = nullptr;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	UInventoryComponent* InventoryComponent;
+
+	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	//UInventoryComponent* InventoryComponent;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input")
 	class UInputAction* InventoryAction;
 
