@@ -1,51 +1,57 @@
 #include "UFlashlightComponent.h"
-#include "Components/SpotLightComponent.h"
+#include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 #include "GameFramework/Actor.h"
 
 UFlashlightComponent::UFlashlightComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
-	MainBeam = nullptr;
-
+    PrimaryComponentTick.bCanEverTick = false; // no per-frame work by default
 }
 
 void UFlashlightComponent::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
-	if (AActor* MyOwner = GetOwner())
-	{
-		if (UCameraComponent* Camera = MyOwner->FindComponentByClass<UCameraComponent>())
-		{	
-			MainBeam = NewObject<USpotLightComponent>(MyOwner, USpotLightComponent::StaticClass(), TEXT("MainFlaslightBeam"));
-			if (MainBeam)
-			{
-				MainBeam->AttachToComponent(Camera, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-				MainBeam->RegisterComponent();
-				MainBeam->SetRelativeLocation(FVector(30.0f, 0.0f, 0.0f));
-				MainBeam->SetRelativeRotation(FRotator::ZeroRotator);
+    AActor* MyOwner = GetOwner();
+    if (!MyOwner) return;
 
-				MainBeam->SetIntensity(0.0f);
-				MainBeam->SetOuterConeAngle(30.0f);
-				MainBeam->SetInnerConeAngle(15.0f);
-				MainBeam->SetLightFalloffExponent(6.0f);
-				MainBeam->SetAttenuationRadius(AttenuationRadius);
-				MainBeam->bUseInverseSquaredFalloff = false;
-				MainBeam->SetLightColor(FLinearColor(1.0f, 0.9f, 0.7f));
-			}
+    UCameraComponent* Camera = MyOwner->FindComponentByClass<UCameraComponent>();
+    if (BeamMesh)
+    {
+        BeamMeshInstance = NewObject<UStaticMeshComponent>(MyOwner);
+        BeamMeshInstance->SetStaticMesh(BeamMesh);
 
-		}
-	}
+        BeamMeshInstance->AttachToComponent(Camera, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+
+        BeamMeshInstance->SetRelativeLocation(FVector(30.0f, 0.0f, 0.0f));
+        BeamMeshInstance->SetRelativeRotation(FRotator::ZeroRotator);
+        BeamMeshInstance->SetRelativeScale3D(FVector(BeamLength / 100.0f, BeamScale, BeamScale));
+
+        BeamMeshInstance->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+        BeamMeshInstance->SetCastShadow(false);
+        BeamMeshInstance->RegisterComponent();
+
+        if (BeamMaterial)
+        {
+            BeamMaterialInstance = UMaterialInstanceDynamic::Create(BeamMaterial, this);
+            BeamMeshInstance->SetMaterial(0, BeamMaterialInstance);
+            BeamMaterialInstance->SetVectorParameterValue(FName("BeamColor"), BeamColor);
+            BeamMaterialInstance->SetScalarParameterValue(FName("BeamOpacity"), 0.0f);
+        }
+
+        BeamMeshInstance->SetVisibility(false);
+    }
 }
+
 
 void UFlashlightComponent::ToggleFlashlight()
 {
-	bIsOn = !bIsOn;
+    bIsOn = !bIsOn;
 
-	if (MainBeam) MainBeam->SetIntensity(bIsOn ? MainIntensity : 0.0f);
-	
-
-	UE_LOG(LogTemp, Warning, TEXT("Flashlight %s"), bIsOn ? TEXT("ON") : TEXT("OFF"));
+    if (BeamMeshInstance && BeamMaterialInstance)
+    {
+        BeamMeshInstance->SetVisibility(bIsOn);
+        BeamMaterialInstance->SetScalarParameterValue(FName("BeamOpacity"), bIsOn ? 1.0f : 0.0f);      
+    }
 }
-

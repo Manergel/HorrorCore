@@ -19,20 +19,28 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ToggleFlashlight();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
-	float MainIntensity = 150.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
-	float AttenuationRadius = 3000.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
-	FLinearColor FlashlightColor = FLinearColor(1.0f, 0.95f, 0.85f);
-
 private:
 	UPROPERTY()
-	class USpotLightComponent* MainBeam;
+	class UStaticMeshComponent* BeamMeshInstance = nullptr;
+
+	UPROPERTY()
+	class UMaterialInstanceDynamic* BeamMaterialInstance = nullptr;
 
 	bool bIsOn = false;
 
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Flashlight")
+	UStaticMesh* BeamMesh = nullptr;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	UMaterialInterface* BeamMaterial = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float BeamLength = 1000.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	float BeamScale = 1.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Flashlight")
+	FLinearColor BeamColor = FLinearColor(1.0f, 0.95f, 0.8f);
 };
