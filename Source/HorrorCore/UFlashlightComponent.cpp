@@ -1,65 +1,59 @@
 ﻿#include "UFlashlightComponent.h"
+#include "Components/SpotLightComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/Actor.h"
-#include "Materials/MaterialInterface.h"
 
+// Sets default values for this component's properties
 UFlashlightComponent::UFlashlightComponent()
 {
-    PrimaryComponentTick.bCanEverTick = false; // No tick per-frame, we only toggle flashlight
+	PrimaryComponentTick.bCanEverTick = false;
+
+	// Set default values
+	bIsFlashlightOn = false;
+	LightIntensity = 5000.0f; // Intensity of the flashlight
+	LightRange = 1200.0f; // Attenuation radius of the spotlight
 }
 
+// Called when the game starts
 void UFlashlightComponent::BeginPlay()
 {
-    Super::BeginPlay();
+	Super::BeginPlay();
 
-    AActor* Owner = GetOwner();
-    if (!Owner) return;
+	AActor* Owner = GetOwner();
+	if (!Owner) return;
 
-    // 1️⃣ Find the camera
-    UCameraComponent* Camera = Owner->FindComponentByClass<UCameraComponent>();
-    if (!Camera) return;
+	UCameraComponent* Camera = Owner->FindComponentByClass<UCameraComponent>();
 
-    // 2️⃣ Create beam mesh component
-    BeamMeshComponent = NewObject<UStaticMeshComponent>(Owner);
-    BeamMeshComponent->AttachToComponent(
-        Camera,
-        FAttachmentTransformRules::SnapToTargetNotIncludingScale
-    );
+	if (Owner)
+	{
+		// Create Spotlight component dynamically
+		FlashlightSpotlight = NewObject<USpotLightComponent>(Owner, USpotLightComponent::StaticClass(), TEXT("FlashlightSpotlight"));
+		FlashlightSpotlight->RegisterComponent();  // Register spotlight component so it exists in the world
+		FlashlightSpotlight->AttachToComponent(Camera, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		FlashlightSpotlight->SetRelativeLocation(MeshOffset);
+		FlashlightSpotlight->SetIntensity(LightIntensity);
+		FlashlightSpotlight->SetAttenuationRadius(LightRange);
+		FlashlightSpotlight->SetOuterConeAngle(25.0f); // Angle of the outer cone of the spotlight
+		FlashlightSpotlight->SetInnerConeAngle(12.0f); // Angle of the inner cone of the spotlight
+		FlashlightSpotlight->SetLightColor(FLinearColor(1.0f, 0.95f, 0.85f)); // Slightly yellow light
+		FlashlightSpotlight->SetVisibility(false); // Initially turn off the spotlight
+	}
 
-    BeamMeshComponent->RegisterComponent();
-
-    // 3️⃣ Assign mesh if provided
-    if (BeamMeshAsset)
-    {
-        BeamMeshComponent->SetStaticMesh(BeamMeshAsset);
-    }
-
-    // 4️⃣ Assign material if provided
-    if (BeamMaterial)
-    {
-        BeamMeshComponent->SetMaterial(0, BeamMaterial);
-    }
-
-    // 5️⃣ Position & scale like a flashlight
-    BeamMeshComponent->SetRelativeLocation(FVector(30.f, 0.f, 0.f));
-    BeamMeshComponent->SetRelativeRotation(FRotator::ZeroRotator);
-    BeamMeshComponent->SetRelativeScale3D(FVector(10.f, 0.2f, 0.2f));
-
-    // 6️⃣ Start OFF
-    BeamMeshComponent->SetVisibility(false);
 }
 
-
+// Toggle the flashlight on and off
 void UFlashlightComponent::ToggleFlashlight()
 {
-    bIsOn = !bIsOn;  // Toggle flashlight state
+	bIsFlashlightOn = !bIsFlashlightOn;
 
-    if (BeamMeshComponent)
-    {
-        // Toggle the visibility of the flashlight beam
-        BeamMeshComponent->SetVisibility(bIsOn);
-
-        // Optionally, you can adjust intensity or any other property of the beam if needed
-    }
+	// If flashlight is on, show light, otherwise hide
+	if (bIsFlashlightOn)
+	{
+		FlashlightSpotlight->SetVisibility(true);
+	}
+	else
+	{
+		FlashlightSpotlight->SetVisibility(false);
+	}
 }

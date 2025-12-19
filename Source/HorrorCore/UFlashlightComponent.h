@@ -3,32 +3,45 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Components/SpotLightComponent.h"
+#include "GameFramework/Actor.h"
 #include "UFlashlightComponent.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class HORRORCORE_API UFlashlightComponent : public UActorComponent
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
 
 public:
-    UFlashlightComponent();
+	// Sets default values for this component's properties
+	UFlashlightComponent();
 
 protected:
-    virtual void BeginPlay() override;
+	// Called when the game starts
+	virtual void BeginPlay() override;
 
 public:
-    UFUNCTION(BlueprintCallable)
-    void ToggleFlashlight();
 
-    UPROPERTY(EditAnywhere, Category = "Flashlight")
-    UStaticMesh* BeamMeshAsset;
-
-    UPROPERTY(EditAnywhere, Category = "Flashlight")
-    UMaterialInterface* BeamMaterial;
+	// Function to toggle flashlight on and off
+	UFUNCTION(BlueprintCallable, Category = "Flashlight")
+	void ToggleFlashlight();
 
 private:
-    UPROPERTY()
-    UStaticMeshComponent* BeamMeshComponent;
 
-    bool bIsOn = false;
+	// Spotlight component for the light effect
+	UPROPERTY(VisibleAnywhere)
+	USpotLightComponent* FlashlightSpotlight;
+
+	// Boolean to track if flashlight is on
+	bool bIsFlashlightOn;
+
+	// Positioning and adjustments for the mesh
+	UPROPERTY(EditAnywhere, Category = "Flashlight")
+	FVector MeshOffset;
+
+	// Flashlight intensity and range
+	UPROPERTY(EditAnywhere, Category = "Flashlight")
+	float LightIntensity;
+
+	UPROPERTY(EditAnywhere, Category = "Flashlight")
+	float LightRange;
 };

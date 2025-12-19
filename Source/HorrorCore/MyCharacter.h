@@ -65,16 +65,5 @@ protected:
 	class UInputAction* InventoryAction;
 
 public:
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	//UInventoryComponent* Inventory;
-
-	//int32 KeysCollected = 0;
-
-	//void AddKey()
-	//{
-	//	KeysCollected++;
-	//	UE_LOG(LogTemp, Warning, TEXT("Keys: %d"), KeysCollected);
-	//}
-
 
 };
