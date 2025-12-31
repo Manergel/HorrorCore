@@ -12,7 +12,7 @@ UFlashlightComponent::UFlashlightComponent()
 	// Set default values
 	bIsFlashlightOn = false;
 	LightIntensity = 5000.0f; // Intensity of the flashlight
-	LightRange = 1200.0f; // Attenuation radius of the spotlight
+	LightRange = 3000.0f; // Attenuation radius of the spotlight
 }
 
 // Called when the game starts

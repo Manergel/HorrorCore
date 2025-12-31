@@ -2,11 +2,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-//#include "IInteractable.h"
 #include "Door.generated.h"
 
 UCLASS()
-class HORRORCORE_API ADoor : public AActor//, public IInteractable
+class HORRORCORE_API ADoor : public AActor
 {
 	GENERATED_BODY()
 	

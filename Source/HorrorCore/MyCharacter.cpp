@@ -89,7 +89,7 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 void AMyCharacter::Interact(const FInputActionValue& Value)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
+	//UE_LOG(LogTemp, Warning, TEXT("Interact Input Received"));
 	FVector Start = FirstPersonCamera->GetComponentLocation();
 	FVector End = Start + FirstPersonCamera->GetForwardVector() * 300.f;
 
@@ -104,7 +104,7 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 	{
 		if (Hit.GetActor())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Trace hit actor: %s"), *Hit.GetActor()->GetName());
+			//UE_LOG(LogTemp, Warning, TEXT("Trace hit actor: %s"), *Hit.GetActor()->GetName());
 
 			// Get the actual owner actor of the component hit
 			ADoor* Door = Cast<ADoor>(Hit.GetActor());
@@ -115,18 +115,9 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 
 			if (Door)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Calling ADoor::Interact on door"));
 				Door->Interact(this);
 			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Hit actor is not a door"));
-			}
 		}
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Trace missed"));
 	}
 }
 
