@@ -30,6 +30,7 @@ public:
 	float OpenSpeed = 90.0f;
 
 	bool bIsOpen = false;
+	bool bIsMoving = false;
 	float TargetYaw;
 	float InitialYaw;
 

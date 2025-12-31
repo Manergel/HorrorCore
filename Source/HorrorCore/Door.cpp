@@ -19,7 +19,7 @@ void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitialYaw = GetActorRotation().Yaw;
+	DoorMesh->GetRelativeRotation();
 	TargetYaw = InitialYaw;
 
 }
@@ -28,10 +28,19 @@ void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	FRotator CurrentRotation = DoorMesh->GetRelativeRotation();
-	float NewYaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, OpenSpeed);
-	DoorMesh->SetRelativeRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
+	if (bIsMoving)
+	{
+		FRotator CurrentRotation = DoorMesh->GetRelativeRotation();
+		float NewYaw = FMath::FInterpConstantTo(CurrentRotation.Yaw, TargetYaw, DeltaTime, OpenSpeed);
+		DoorMesh->SetRelativeRotation(FRotator(CurrentRotation.Pitch, NewYaw, CurrentRotation.Roll));
 
+		//Check if door reached target
+		if (FMath::IsNearlyEqual(NewYaw, TargetYaw, 1.0f))
+		{
+			bIsMoving = false;
+			bIsOpen = (TargetYaw != InitialYaw);
+		}
+	}
 }
 
 
@@ -40,8 +49,10 @@ void ADoor::Interact(AActor* Interactor)
 	//UE_LOG(LogTemp, Warning, TEXT("ADoor::Interact called by %s"), *Interactor->GetName());
 
 	if (!Interactor) return;
+	if (bIsMoving) return;
 
 	bIsOpen = !bIsOpen;
+	bIsMoving = true;
 
 	if (bIsOpen)
 	{	
