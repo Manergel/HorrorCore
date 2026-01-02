@@ -51,11 +51,26 @@ void ADoor::Interact(AActor* Interactor)
 	if (!Interactor) return;
 	if (bIsMoving) return;
 
+	if (bIsLocked)
+	{
+		if (LockedSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, LockedSound, GetActorLocation());
+		}
+
+		return;
+	}
+
 	bIsOpen = !bIsOpen;
 	bIsMoving = true;
 
 	if (bIsOpen)
 	{	
+		if (OpenSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, OpenSound, GetActorLocation());
+		}
+
 		FVector DoorForward = FrameMesh->GetForwardVector();
 		FVector ToPlayer = Interactor->GetActorLocation() - GetActorLocation();
 		ToPlayer.Normalize();
@@ -77,8 +92,12 @@ void ADoor::Interact(AActor* Interactor)
 
 	else
 	{
+		if (CloseSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, CloseSound, GetActorLocation());
+		}
+
 		TargetYaw = InitialYaw;
 		//UE_LOG(LogTemp, Warning, TEXT("Door closed by %s"), *Interactor->GetName());
 	}
-
 }

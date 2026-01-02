@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Door.generated.h"
 
 UCLASS()
@@ -28,6 +29,20 @@ public:
 	float OpenAngle = 90.0f;
 	UPROPERTY(EditAnywhere, Category = "Door")
 	float OpenSpeed = 90.0f;
+
+	//Sound pointers
+	UPROPERTY(EditAnywhere, Category = "Door|Sound")
+	USoundBase* OpenSound;
+	UPROPERTY(EditAnywhere, Category = "Door|Sound")
+	USoundBase* CloseSound;
+	UPROPERTY(EditAnywhere, Category = "Door|Sound")
+	USoundBase* LockedSound;
+
+	//Key logic
+	UPROPERTY(EditAnywhere, Category = "Door|Lock")
+	bool bIsLocked = false;
+	UPROPERTY(EditAnywhere, Category = "Door|Lock")
+	FName RequiredKey;
 
 	bool bIsOpen = false;
 	bool bIsMoving = false;
