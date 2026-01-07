@@ -21,7 +21,7 @@ void ADoor::BeginPlay()
 
 	DoorMesh->GetRelativeRotation();
 	TargetYaw = InitialYaw;
-
+	
 }
 
 void ADoor::Tick(float DeltaTime)
