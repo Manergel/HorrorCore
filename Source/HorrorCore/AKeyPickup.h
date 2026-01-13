@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
 #include "AKeyPickup.generated.h"
 
 UCLASS()
@@ -20,11 +21,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, Category = "Key")
-	UStaticMesh* KeyMesh;
+	UStaticMeshComponent* KeyMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Key")
 	USoundBase* PickupKey;

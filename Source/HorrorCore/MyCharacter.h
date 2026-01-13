@@ -66,4 +66,7 @@ protected:
 
 public:
 
+	UPROPERTY(BlueprintReadWrite, Category = "Keys")
+	bool bHasKey = false;
+
 };

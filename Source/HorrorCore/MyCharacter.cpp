@@ -7,6 +7,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerController.h"
 #include "Door.h"
+#include "AKeyPickup.h"
 //#include "IInteractable.h"
 
 
@@ -116,6 +117,18 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 			if (Door)
 			{
 				Door->Interact(this);
+			}
+
+			AAKeyPickup* Key = Cast<AAKeyPickup>(Hit.GetActor());
+			if (!Key && Hit.GetComponent())
+			{
+				Key = Cast<AAKeyPickup>(Hit.GetComponent()->GetOwner());
+			}
+
+			if (Key)
+			{
+				Key->Interact(this);
+				return;
 			}
 		}
 	}

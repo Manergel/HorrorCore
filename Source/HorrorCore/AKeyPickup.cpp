@@ -2,12 +2,15 @@
 
 
 #include "AKeyPickup.h"
+#include "MyCharacter.h"
 
 // Sets default values
 AAKeyPickup::AAKeyPickup()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMesh"));
+	RootComponent = KeyMesh;
 
 }
 
@@ -15,13 +18,24 @@ AAKeyPickup::AAKeyPickup()
 void AAKeyPickup::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
-// Called every frame
-void AAKeyPickup::Tick(float DeltaTime)
+void AAKeyPickup::Interact(AActor* Interactor)
 {
-	Super::Tick(DeltaTime);
+	if (!Interactor) return;
 
+	AMyCharacter* Player = Cast<AMyCharacter>(Interactor);
+	if (Player)
+	{
+		Player->bHasKey = true;
+	}
+
+	if (PickupKey)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, PickupKey, GetActorLocation());
+	}
+
+	Destroy();
 }
 
