@@ -37,6 +37,8 @@ public:
 	USoundBase* CloseSound;
 	UPROPERTY(EditAnywhere, Category = "Door|Sound")
 	USoundBase* LockedSound;
+	UPROPERTY(EditAnywhere, Category = "Door|Sound")
+	USoundBase* UnlockedSound;
 
 	//Key logic
 	UPROPERTY(EditAnywhere, Category = "Door|Lock")

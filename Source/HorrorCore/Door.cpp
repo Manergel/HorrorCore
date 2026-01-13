@@ -1,4 +1,5 @@
 #include "Door.h"
+#include "MyCharacter.h"
 
 
 ADoor::ADoor()
@@ -51,14 +52,29 @@ void ADoor::Interact(AActor* Interactor)
 	if (!Interactor) return;
 	if (bIsMoving) return;
 
+	AMyCharacter* Player = Cast<AMyCharacter>(Interactor);
+	if (!Player) return;
+
 	if (bIsLocked)
 	{
-		if (LockedSound)
+		if (Player && Player->bHasKey)
 		{
-			UGameplayStatics::PlaySoundAtLocation(this, LockedSound, GetActorLocation());
+			if (UnlockedSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this, UnlockedSound, GetActorLocation());
+			}
+			bIsLocked = false;
+			return;
 		}
+		else
+		{
+			if (LockedSound)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this, LockedSound, GetActorLocation());
+			}
 
-		return;
+			return;
+		}
 	}
 
 	bIsOpen = !bIsOpen;
