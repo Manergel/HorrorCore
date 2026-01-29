@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/SphereComponent.h"
 #include "AKeyPickup.generated.h"
 
 UCLASS()
@@ -28,7 +29,21 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Key")
 	USoundBase* PickupKey;
 
-	UFUNCTION(BlueprintCallable)
-	void Interact(AActor* Interactor);
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* PickupSphere;
+
+	UPROPERTY(EditAnywhere)
+	USoundBase* PickupSound;
+
+	UFUNCTION()
+	void OnPickup
+	(
+		UPrimitiveComponent* OverlappedComp,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
 
 };

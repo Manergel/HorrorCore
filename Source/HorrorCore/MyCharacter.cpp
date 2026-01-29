@@ -119,17 +119,6 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 				Door->Interact(this);
 			}
 
-			AAKeyPickup* Key = Cast<AAKeyPickup>(Hit.GetActor());
-			if (!Key && Hit.GetComponent())
-			{
-				Key = Cast<AAKeyPickup>(Hit.GetComponent()->GetOwner());
-			}
-
-			if (Key)
-			{
-				Key->Interact(this);
-				return;
-			}
 		}
 	}
 }

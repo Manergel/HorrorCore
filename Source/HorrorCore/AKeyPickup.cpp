@@ -12,6 +12,18 @@ AAKeyPickup::AAKeyPickup()
 	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMesh"));
 	RootComponent = KeyMesh;
 
+	PickupSphere = CreateDefaultSubobject<USphereComponent>("PickupSphere");
+	PickupSphere->SetupAttachment(KeyMesh);
+	PickupSphere->SetSphereRadius(70.f);
+	PickupSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	PickupSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
+	PickupSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+	PickupSphere->OnComponentBeginOverlap.AddDynamic
+	(
+		this, &AAKeyPickup::OnPickup
+	);
+
 }
 
 // Called when the game starts or when spawned
@@ -21,21 +33,32 @@ void AAKeyPickup::BeginPlay()
 
 }
 
-void AAKeyPickup::Interact(AActor* Interactor)
-{
-	if (!Interactor) return;
 
-	AMyCharacter* Player = Cast<AMyCharacter>(Interactor);
+void AAKeyPickup::OnPickup
+(
+	UPrimitiveComponent*,
+	AActor* OtherActor,
+	UPrimitiveComponent*,
+	int32,
+	bool,
+	const FHitResult&
+)
+
+{
+	AMyCharacter* Player = Cast<AMyCharacter>(OtherActor);
+	if (!Player) return;
+
 	if (Player)
 	{
 		Player->bHasKey = true;
 	}
 
-	if (PickupKey)
+	if (PickupSound)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, PickupKey, GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
 	}
 
 	Destroy();
 }
+
 
