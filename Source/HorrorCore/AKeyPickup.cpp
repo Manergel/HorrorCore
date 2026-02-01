@@ -1,28 +1,15 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "AKeyPickup.h"
 #include "MyCharacter.h"
 
 // Sets default values
 AAKeyPickup::AAKeyPickup()
 {
-	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bCanEverTick = true;
 
 	KeyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("KeyMesh"));
 	RootComponent = KeyMesh;
 
-	PickupSphere = CreateDefaultSubobject<USphereComponent>("PickupSphere");
-	PickupSphere->SetupAttachment(KeyMesh);
-	PickupSphere->SetSphereRadius(70.f);
-	PickupSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	PickupSphere->SetCollisionResponseToAllChannels(ECR_Ignore);
-	PickupSphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
-
-	PickupSphere->OnComponentBeginOverlap.AddDynamic
-	(
-		this, &AAKeyPickup::OnPickup
-	);
+	KeyMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 }
 
@@ -33,24 +20,31 @@ void AAKeyPickup::BeginPlay()
 
 }
 
-
-void AAKeyPickup::OnPickup
-(
-	UPrimitiveComponent*,
-	AActor* OtherActor,
-	UPrimitiveComponent*,
-	int32,
-	bool,
-	const FHitResult&
-)
-
+void AAKeyPickup::Interact(AActor* Interactor)
 {
-	AMyCharacter* Player = Cast<AMyCharacter>(OtherActor);
+
+	UE_LOG(LogTemp, Warning, TEXT("KEY INTERACT CALLED"));
+
+	AMyCharacter* Player = Cast<AMyCharacter>(Interactor);
 	if (!Player) return;
 
 	if (Player)
 	{
 		Player->bHasKey = true;
+	}
+
+	const float MaxPickupDistance = 150.f;
+
+	float Distance = FVector::Dist
+	(
+		Player->GetActorLocation(),
+		GetActorLocation()
+	);
+
+	if (Distance > MaxPickupDistance)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Key too far away"));
+		return;
 	}
 
 	if (PickupSound)

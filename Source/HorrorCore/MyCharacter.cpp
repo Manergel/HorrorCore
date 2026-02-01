@@ -117,8 +117,15 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 			if (Door)
 			{
 				Door->Interact(this);
+				return;
 			}
 
+			if (AAKeyPickup* Key = Cast<AAKeyPickup>(Hit.GetActor()))
+			{
+				//UE_LOG(LogTemp, Warning, TEXT("Key Interacted"));
+				Key->Interact(this);
+				return;
+			}
 		}
 	}
 }

@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -23,27 +21,16 @@ protected:
 
 public:	
 
+	void Interact(AActor* Interactor);
+
 	UPROPERTY(EditAnywhere, Category = "Key")
 	UStaticMeshComponent* KeyMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Key")
 	USoundBase* PickupKey;
 
-	UPROPERTY(VisibleAnywhere)
-	USphereComponent* PickupSphere;
-
 	UPROPERTY(EditAnywhere)
 	USoundBase* PickupSound;
 
-	UFUNCTION()
-	void OnPickup
-	(
-		UPrimitiveComponent* OverlappedComp,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex,
-		bool bFromSweep,
-		const FHitResult& SweepResult
-	);
 
 };
