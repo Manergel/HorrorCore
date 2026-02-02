@@ -32,5 +32,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	USoundBase* PickupSound;
 
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* InteractSphere;
 
 };
