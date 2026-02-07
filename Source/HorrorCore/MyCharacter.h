@@ -9,6 +9,7 @@
 
 class UInventoryComponent;
 class UUserWidget;
+class ACombinationLockActor;
 
 UCLASS()
 class HORRORCORE_API AMyCharacter : public ACharacter
@@ -53,6 +54,9 @@ protected:
 	void ToggleInventory();
 	UFUNCTION()
 	void ToggleFlashlight();
+
+	UPROPERTY()
+	ACombinationLockActor* ActiveLock = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<UUserWidget> InventoryWidgetClass;

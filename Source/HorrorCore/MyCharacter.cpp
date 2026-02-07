@@ -8,6 +8,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Door.h"
 #include "AKeyPickup.h"
+#include "CombinationLockActor.h"
 //#include "IInteractable.h"
 
 
@@ -120,12 +121,27 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 				return;
 			}
 
+			ACombinationLockActor* Lock = Cast<ACombinationLockActor>(Hit.GetActor());
+			if (!Lock && Hit.GetComponent())
+			{
+				Lock = Cast<ACombinationLockActor>(Hit.GetComponent()->GetOwner());
+			}
+
+			if (Lock)
+			{
+				ActiveLock = Lock;
+				ActiveLock->BeginUse(this);
+				return;
+			}
+
 			if (AAKeyPickup* Key = Cast<AAKeyPickup>(Hit.GetActor()))
 			{
 				//UE_LOG(LogTemp, Warning, TEXT("Key Interacted"));
 				Key->Interact(this);
 				return;
 			}
+
+
 		}
 	}
 }
