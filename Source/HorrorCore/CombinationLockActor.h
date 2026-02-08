@@ -24,7 +24,12 @@ public:
 	void ConfirmCode();
 
 	UFUNCTION()
-	void BeginUse(APawn* UsingPawn);
+	void BeginInteraction(class AMyCharacter* Player);
+	UFUNCTION()
+	void EndInteraction();
+
+	UPROPERTY()
+	class AMyCharacter* ActivePlayer = nullptr;
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,8 +41,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 	int32 SelectedIndex = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
-	int32 EnteredCode = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")
 	TArray<int32> CurrentCode;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lock")

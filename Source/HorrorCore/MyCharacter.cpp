@@ -65,6 +65,9 @@ void AMyCharacter::Move(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+		if (ActiveLock)
+			return;
+
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
@@ -83,6 +86,9 @@ void AMyCharacter::Look(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+		if (ActiveLock)
+			return;
+
 		AddControllerYawInput(LookAxis.X);
 		AddControllerPitchInput(-LookAxis.Y);
 	}
@@ -130,7 +136,7 @@ void AMyCharacter::Interact(const FInputActionValue& Value)
 			if (Lock)
 			{
 				ActiveLock = Lock;
-				ActiveLock->BeginUse(this);
+				ActiveLock->BeginInteraction(this);
 				return;
 			}
 

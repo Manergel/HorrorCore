@@ -11,19 +11,12 @@ ACombinationLockActor::ACombinationLockActor()
 	InteractionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractionBox"));
 	InteractionBox->SetupAttachment(Root);
 	InteractionBox->SetBoxExtent(FVector(15.f, 15.f, 15.f));
-	InteractionBox->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	InteractionBox->SetCollisionResponseToAllChannels(ECR_Ignore);
-	InteractionBox->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+
 
 	LockLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("LockLight"));
 	LockLight->SetupAttachment(RootComponent);
 	LockLight->SetIntensity(5000.f);
 	LockLight->SetLightColor(RedColor);
-
-	CurrentCode = { 0,0,0,0 };
-	CorrectCode = { 5,2,1,7 };
-
-	PrintCode();
 
 }
 
@@ -31,6 +24,11 @@ ACombinationLockActor::ACombinationLockActor()
 void ACombinationLockActor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CurrentCode = { 0,0,0,0 };
+	CorrectCode = { 5,2,1,7 };
+
+	PrintCode();
 	
 }
 
@@ -90,7 +88,14 @@ void ACombinationLockActor::PrintCode()const
 		CurrentCode[0], CurrentCode[1], CurrentCode[2], CurrentCode[3], SelectedIndex);
 }
 
-void ACombinationLockActor::BeginUse(APawn* UsingPawn)
+void ACombinationLockActor::BeginInteraction(class AMyCharacter* Player)
 {
+	ActivePlayer = Player;
 	UE_LOG(LogTemp, Warning, TEXT("Lock engaged"));
+}
+
+void ACombinationLockActor::EndInteraction()
+{
+	ActivePlayer = nullptr;
+	UE_LOG(LogTemp, Warning, TEXT("Lock interaction ended"));
 }
